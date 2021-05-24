@@ -76,7 +76,7 @@ public class OnboardingActivity extends AppCompatActivity {
                 //yes - ask for login
                 mNextBtn2.setOnClickListener(view -> {
 
-                    Intent intent = new Intent(getApplicationContext(), NavigationActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     intent.putExtra("Type", "Login");
                     startActivity(intent);
 
