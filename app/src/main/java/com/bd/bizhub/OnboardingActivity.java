@@ -18,6 +18,10 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import io.realm.mongodb.App;
+import io.realm.mongodb.AppConfiguration;
+import io.realm.mongodb.User;
+
 public class OnboardingActivity extends AppCompatActivity {
 
     private static final String PREFS_NAME = "prefs";
@@ -79,6 +83,7 @@ public class OnboardingActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     intent.putExtra("Type", "Login");
                     startActivity(intent);
+
 
                     //We need this to go back
                     //OnboardingActivity.this.finish();
@@ -199,10 +204,13 @@ public class OnboardingActivity extends AppCompatActivity {
         //if the user is already signed in
         //we will close this activity
         //and take the user to profile activity
-        //if (mAuth.getCurrentUser() != null) {
-       //     startActivity(new Intent(this, NavigationActivity.class));
-          //  OnboardingActivity.this.finish();
-       // }
+        App app = new App(new AppConfiguration.Builder(BuildConfig.MONGODB_REALM_APP_ID)
+                .build());
+        User user = app.currentUser();
+        if ( user!= null) {
+            startActivity(new Intent(this, NavigationActivity.class));
+            OnboardingActivity.this.finish();
+        }
     }
 
     public void toggleTheme(boolean darkTheme) {

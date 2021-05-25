@@ -2,6 +2,7 @@ package com.bd.bizhub;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +19,11 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
+import io.realm.Realm;
+import io.realm.mongodb.App;
+import io.realm.mongodb.AppConfiguration;
+import io.realm.mongodb.User;
+
 public class NavigationActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
@@ -29,7 +35,7 @@ public class NavigationActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-       BottomNavigationView navBottomView = findViewById(R.id.bottom_navigation_view);
+        BottomNavigationView navBottomView = findViewById(R.id.bottom_navigation_view);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         navBottomView.getMaxItemCount();
 
@@ -53,8 +59,21 @@ public class NavigationActivity extends AppCompatActivity {
 
         Menu menu = navigationView.getMenu();
         Menu top = menu.addSubMenu("More");
-        top.add("FAQ").setCheckable(true).setIcon(R.drawable.faq).setOnMenuItemClickListener(item -> {
+        top.add("Logout").setCheckable(true).setIcon(R.drawable.faq).setOnMenuItemClickListener(item -> {
 
+            App app = new App(new AppConfiguration.Builder(BuildConfig.MONGODB_REALM_APP_ID)
+                    .build());
+            User user = app.currentUser();
+            user.logOutAsync( result -> {
+                if (result.isSuccess()) {
+                    Log.v("AUTH", "Successfully logged out.: ID:"+ user.getId());
+                    startActivity(new Intent(this, LoginActivity.class));
+                    NavigationActivity.this.finish();
+
+                } else {
+                    Log.e("AUTH", "log out failed! Error: " + result.getError().toString());
+                }
+            });
          //   Intent intent = new Intent(this, RegisterActivity.class);
          //   startActivity(intent);
 

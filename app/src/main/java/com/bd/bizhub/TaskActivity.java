@@ -1,0 +1,141 @@
+package com.bd.bizhub;
+
+import android.app.AlertDialog;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bd.bizhub.databinding.ActivityMainBinding;
+import com.bd.bizhub.model.ProjectAdapter;
+import com.bd.bizhub.model.Task;
+import com.bd.bizhub.model.TaskAdapter;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
+
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.mongodb.App;
+import io.realm.mongodb.AppConfiguration;
+import io.realm.mongodb.User;
+import io.realm.mongodb.sync.SyncConfiguration;
+
+public class TaskActivity extends AppCompatActivity {
+    Realm projectRealm;
+    User user;
+    RecyclerView recyclerView;
+    TaskAdapter adapter;
+    FloatingActionButton fab;
+    String partition,projectName;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        App app = new App(new AppConfiguration.Builder(BuildConfig.MONGODB_REALM_APP_ID)
+                .build());
+        user = app.currentUser();
+
+        partition = getIntent().getStringExtra("PARTITION");
+        projectName = getIntent().getStringExtra("PROJECT NAME");
+
+
+        projectRealm = Realm.getDefaultInstance();
+
+        // display the name of the project in the action bar via the title member variable of the Activity
+//        getActionBar().setTitle(projectName);
+
+        SyncConfiguration config = new SyncConfiguration.Builder(user, partition)
+                .build();
+
+        // Sync all realm changes via a new instance, and when that instance has been successfully created connect it to an on-screen list (a recycler view)
+        Realm.getInstanceAsync(config, new Realm.Callback() {
+            @Override
+            public void onSuccess(Realm realm) {
+                projectRealm = realm;
+                setUpRecyclerView(projectRealm, user, partition);
+            }
+        });
+
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_notifications);
+        recyclerView = findViewById(R.id.task_list);
+        fab = findViewById(R.id.floating_action_button);
+
+        fab.setOnClickListener(v->{
+
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+
+            View viewInflated = getLayoutInflater().inflate(R.layout.alert_create_task, null);
+
+            TextInputLayout input = viewInflated.findViewById(R.id.input);
+            EditText inputET = input.getEditText();
+
+            builder.setView(viewInflated);
+
+            builder.setTitle("Enter task name:");
+
+            builder.setCancelable(true);
+            // add a button
+            builder.setPositiveButton("Create", (dialog, which) -> {
+                // Close
+                Task task = new Task(inputET.getText().toString());
+                Log.d("Input Text","Input Task Name -------- "+inputET.getText().toString());
+
+                projectRealm.executeTransactionAsync(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        //Insert task into realm
+                        realm.insert(task);
+                    }
+                });
+
+                dialog.dismiss();
+            });
+
+            builder.setNegativeButton("Cancel", (dialog, which) -> {
+                dialog.cancel();
+            });
+
+
+           builder.show();
+
+        });
+
+    }
+
+    private final void setUpRecyclerView(Realm realm, User user, String partition) {
+        recyclerView = findViewById(R.id.task_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        Log.d("Proj_list",""+realm.where(Task.class).sort("id").findAll().toString());
+        adapter = new TaskAdapter(realm.where(Task.class).sort("id").findAll(), user, partition);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setHasFixedSize(true);
+        adapter.notifyDataSetChanged();
+
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        projectRealm.close();
+    }
+
+
+
+}
