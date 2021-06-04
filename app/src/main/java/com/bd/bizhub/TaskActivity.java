@@ -27,7 +27,9 @@ import io.realm.RealmList;
 import io.realm.mongodb.App;
 import io.realm.mongodb.AppConfiguration;
 import io.realm.mongodb.User;
+import io.realm.mongodb.sync.ClientResetRequiredError;
 import io.realm.mongodb.sync.SyncConfiguration;
+import io.realm.mongodb.sync.SyncSession;
 
 public class TaskActivity extends AppCompatActivity {
     Realm projectRealm;
@@ -40,9 +42,11 @@ public class TaskActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        App app = new App(new AppConfiguration.Builder(BuildConfig.MONGODB_REALM_APP_ID)
-                .build());
+
+
+        App app = ((RealmDb) this.getApplication()).getApp();
         user = app.currentUser();
+
 
         partition = getIntent().getStringExtra("PARTITION");
         projectName = getIntent().getStringExtra("PROJECT NAME");
@@ -61,16 +65,18 @@ public class TaskActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Realm realm) {
                 projectRealm = realm;
-                setUpRecyclerView(projectRealm, user, partition);
+                setUpRecyclerView(realm, user, partition);
             }
         });
 
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_notifications);
+        getSupportActionBar().setTitle("Tasks");
         recyclerView = findViewById(R.id.task_list);
         fab = findViewById(R.id.floating_action_button);
 
@@ -133,7 +139,7 @@ public class TaskActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        projectRealm.close();
+        //projectRealm.close();
     }
 
 

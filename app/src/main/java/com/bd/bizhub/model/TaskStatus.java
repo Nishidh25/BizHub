@@ -10,7 +10,7 @@ public enum TaskStatus {
 
     private String displayName;
 
-    private TaskStatus(String displayName) {
+    TaskStatus(String displayName) {
         this.displayName = displayName;
     }
     @NotNull

@@ -9,25 +9,31 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bd.bizhub.model.User;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.bson.Document;
+
 import java.util.concurrent.atomic.AtomicReference;
 
+
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.exceptions.RealmPrimaryKeyConstraintException;
 import io.realm.mongodb.App;
-import io.realm.mongodb.AppConfiguration;
 import io.realm.mongodb.Credentials;
+import io.realm.mongodb.User;
+import io.realm.mongodb.mongo.MongoClient;
+import io.realm.mongodb.mongo.MongoCollection;
+import io.realm.mongodb.mongo.MongoDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "Register";
     Button mButtonSignUp;
     Realm realm;
-    private User user;
+    App app;
+    Boolean reg = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +53,6 @@ public class RegisterActivity extends AppCompatActivity {
 
 
 
-
         mButtonSignUp.setOnClickListener(v -> {
 
             EditText emailET = emailTV.getEditText();
@@ -63,51 +68,38 @@ public class RegisterActivity extends AppCompatActivity {
             }else if (passwordET.length() ==0) {
                 showSnackBar("Enter a valid password");
                 passwordET.requestFocus();
-            }//else if (mEditTextConfirmPassword.length() ==0) {
-              //  showSnackBar("Enter a valid Password");
-              //  mEditTextPassword.requestFocus();
-            //}
+            }
             else {
 
                 try{
 
-    /*                realm.beginTransaction();
-
-                    user = realm.createObject(User.class);
-                    user.set_id("2");
-                   // user.setEmail(emailET.getText().toString());
-                   // user.setPassword(passwordET.getText().toString());
-                    user.setName(nameET.getText().toString());
-
-                    realm.commitTransaction();
-
-
-*/
-
-                    App app = new App(new AppConfiguration.Builder(BuildConfig.MONGODB_REALM_APP_ID)
-                            .build());
+                    app = ((RealmDb) this.getApplication()).getApp();
 
                   //  Credentials emailPasswordCredentials = Credentials.emailPassword(emailET.getText().toString(), passwordET.getText().toString());
 
-                    AtomicReference<io.realm.mongodb.User> user = new AtomicReference<>();
+                    AtomicReference<User> user = new AtomicReference<>();
                     app.getEmailPassword().registerUserAsync(emailET.getText().toString(), passwordET.getText().toString(), it -> { //loginAsync
                         if (it.isSuccess()) {
                             Log.v("AUTH", "Successfully created User");
                             showSnackBar("Successfully created user");
                             user.set(app.currentUser());
-                            Intent i = new Intent(RegisterActivity.this, NavigationActivity.class);
-                            startActivity(i);
-                            RegisterActivity.this.finish();
+
+                         //   Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+                         //   i.putExtra("Registering",true);
+                          //  i.putExtra("email",emailET.getText().toString());
+                          //  i.putExtra("pass", passwordET.getText().toString());
+
+                         //   startActivity(i);
                         } else {
                             Log.e("AUTH", it.getError().toString());
                         }
                     });
 
-
                 } catch (RealmPrimaryKeyConstraintException e){
                     e.printStackTrace();
                     showSnackBar("User found on db.");
                 }
+
 
             }
         });

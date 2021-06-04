@@ -14,7 +14,7 @@
             android:id="@+id/navigation_dashboard"
             android:icon="@drawable/anim_clock"
             android:checkable="true"
-            android:title="Reminders" />
+            android:title="Workspace" />
 
         <item
             android:id="@+id/navigation_notifications"

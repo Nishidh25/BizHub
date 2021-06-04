@@ -18,7 +18,7 @@ android {
     }
 
     buildTypes {
-        def appId = "tasktracker-iieek"  // Replace with proper Application ID
+        def appId = "bizhub-uvprw"  // Replace with proper Application ID
         debug {
             buildConfigField "String", "MONGODB_REALM_APP_ID", "\"${appId}\""
         }

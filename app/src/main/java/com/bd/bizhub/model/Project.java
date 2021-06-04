@@ -9,7 +9,9 @@ import io.realm.annotations.RealmClass;
 
 @RealmClass(embedded = true)
 public class Project extends RealmObject {
+    @Nullable
     private String name;
+    @Nullable
     private String partition;
     public Project(String name,String partition){
         this.name = name;

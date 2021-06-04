@@ -15,7 +15,6 @@ public class Task extends RealmObject {
     @PrimaryKey
     @Required
     @RealmField("_id")
-    @NotNull
     private ObjectId id;
     @Required
     private String name;

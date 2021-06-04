@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.bson.Document;
+
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.realm.Realm;
@@ -22,12 +24,16 @@ import io.realm.mongodb.App;
 import io.realm.mongodb.AppConfiguration;
 import io.realm.mongodb.Credentials;
 import io.realm.mongodb.User;
+import io.realm.mongodb.mongo.MongoClient;
+import io.realm.mongodb.mongo.MongoCollection;
+import io.realm.mongodb.mongo.MongoDatabase;
 
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "Home";
     TextView Create;
     private Realm realm;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,27 +79,19 @@ public class LoginActivity extends AppCompatActivity {
 
                     }
                 }
- /*
-                assert passwordET != null;
-                if (checkUser(emailET.getText().toString(),passwordET.getText().toString())){
-                    showSnackBar("Login Success");
-                    Intent i = new Intent(LoginActivity.this, NavigationActivity.class);
-                    startActivity(i);
-                }else {
-                    showSnackBar("Login Failed");
-                }
-*/
 
 
-                App app = new App(new AppConfiguration.Builder(BuildConfig.MONGODB_REALM_APP_ID)
-                        .build());
+                App app = ((RealmDb) LoginActivity.this.getApplication()).getApp();
+
                 Credentials emailPasswordCredentials = Credentials.emailPassword(emailET.getText().toString(),passwordET.getText().toString());
+
                 AtomicReference<User> user = new AtomicReference<>();
                 app.loginAsync(emailPasswordCredentials, it -> {
                     if (it.isSuccess()) {
                         Log.v("AUTH", "Successfully authenticated using an email and password.");
                         showSnackBar("Login Success");
                         user.set(app.currentUser());
+
                         Intent i = new Intent(LoginActivity.this, NavigationActivity.class);
                         startActivity(i);
 
@@ -105,18 +103,6 @@ public class LoginActivity extends AppCompatActivity {
 
             }
 
-  /*          private boolean checkUser(String email, String password) {
-                RealmResults<User> realmObjects = realm.where(User.class).findAll();
-                for (User user : realmObjects) {
-                    if (email.equals(user.getEmail()) && password.equals(user.getPassword())) {
-                        Log.e(TAG, user.getEmail());
-                        return true;
-                    }
-                }
-                Log.e(TAG, String.valueOf(realm.where(User.class).contains("email", email)));
-                return false;
-            }
-*/
 
             private void showSnackBar(String msg) {
                 try {
@@ -130,5 +116,7 @@ public class LoginActivity extends AppCompatActivity {
 
         });
       //  realm.close();
+
     }
+
 }

@@ -5,17 +5,22 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+import io.realm.RealmModel;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
-public final class Member {
+
+public class Member extends RealmObject {
     @NotNull
-    private final String id;
+    @PrimaryKey
+    private String _id;
     @NotNull
-    private final String name;
+    private String name;
 
     // Standard getters & setters
     @NotNull
     public final String getId() {
-        return this.id;
+        return this._id;
     }
 
     @NotNull
@@ -25,8 +30,9 @@ public final class Member {
 
 
     public Member(@NotNull Document document) {
-        this.id = (String) Objects.requireNonNull(document.get("_id"));
+        this._id = (String) Objects.requireNonNull(document.get("_id"));
         this.name = (String) Objects.requireNonNull(document.get("name"));
 
     }
+    public Member(){};
 }

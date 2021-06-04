@@ -59,27 +59,21 @@ public class NavigationActivity extends AppCompatActivity {
 
         Menu menu = navigationView.getMenu();
         Menu top = menu.addSubMenu("More");
-        top.add("Logout").setCheckable(true).setIcon(R.drawable.faq).setOnMenuItemClickListener(item -> {
-
-            App app = new App(new AppConfiguration.Builder(BuildConfig.MONGODB_REALM_APP_ID)
-                    .build());
-            User user = app.currentUser();
-            user.logOutAsync( result -> {
-                if (result.isSuccess()) {
-                    Log.v("AUTH", "Successfully logged out.: ID:"+ user.getId());
-                    startActivity(new Intent(this, LoginActivity.class));
-                    NavigationActivity.this.finish();
-
-                } else {
-                    Log.e("AUTH", "log out failed! Error: " + result.getError().toString());
-                }
-            });
-         //   Intent intent = new Intent(this, RegisterActivity.class);
-         //   startActivity(intent);
 
 
+        top.add("Notifications").setCheckable(true).setIcon(R.drawable.ic_baseline_notifications_active_24).setOnMenuItemClickListener(item -> {
 
-            //loadFragment(new SlideshowFragment());
+            //   Intent intent = new Intent(this, RegisterActivity.class);
+            //   startActivity(intent);
+
+            return false;
+        });
+
+        top.add("Chat").setCheckable(true).setIcon(R.drawable.ic_baseline_chat_24).setOnMenuItemClickListener(item -> {
+
+            //   Intent intent = new Intent(this, RegisterActivity.class);
+            //   startActivity(intent);
+
             return false;
         });
 
@@ -87,6 +81,25 @@ public class NavigationActivity extends AppCompatActivity {
 
          //   Intent intent = new Intent(this, RegisterActivity.class);
          //   startActivity(intent);
+
+            return false;
+        });
+
+        top.add("Logout").setCheckable(true).setIcon(R.drawable.ic_baseline_exit_to_app_24).setOnMenuItemClickListener(item -> {
+
+            App app = new App(new AppConfiguration.Builder(BuildConfig.MONGODB_REALM_APP_ID)
+                    .build());
+            User user = app.currentUser();
+            user.logOutAsync( result -> {
+                if (result.isSuccess()) {
+                    Log.v("AUTH", "Successfully logged out.: ID:"+ user.getId());
+                    startActivity(new Intent(this, OnboardingActivity.class));
+                    NavigationActivity.this.finish();
+
+                } else {
+                    Log.e("AUTH", "log out failed! Error: " + result.getError().toString());
+                }
+            });
 
             return false;
         });

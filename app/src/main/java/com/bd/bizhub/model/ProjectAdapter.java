@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bd.bizhub.LoginActivity;
+import com.bd.bizhub.MemberActivity;
 import com.bd.bizhub.OnboardingActivity;
 import com.bd.bizhub.R;
 import com.bd.bizhub.TaskActivity;
@@ -22,18 +23,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import io.realm.OrderedRealmCollection;
 import io.realm.RealmList;
+import io.realm.RealmRecyclerViewAdapter;
 import io.realm.mongodb.User;
 
 
 
-public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder> {
+public class ProjectAdapter extends RealmRecyclerViewAdapter<Project, ProjectAdapter.ProjectViewHolder> {
 
     private RealmList<Project> project;
     private User user;
     private Context mContext;
 
-    public ProjectAdapter(RealmList<Project> project,  User user, Context context) {
+
+    public ProjectAdapter(@androidx.annotation.Nullable @Nullable OrderedRealmCollection<Project> data,
+                          boolean autoUpdate,
+                          RealmList<Project> project,  User user, Context context) {
+        super(data, autoUpdate);
         this.project = project;
         this.user = user;
         this.mContext = context;
@@ -67,7 +74,7 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
                 Log.v("Opening Members", "Opening membership for project: "+proj.getPartition());
 
                 if (proj.getPartition().equals("project="+user.getId().toString())){
-                    Intent intent = new Intent(v.getContext(), TaskActivity.class);
+                    Intent intent = new Intent(v.getContext(), MemberActivity.class);
 
                     intent.putExtra("PARTITION", proj.getPartition());
                     intent.putExtra("PROJECT NAME", proj.getName());
@@ -77,14 +84,13 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
                     bundle.putString("PROJECT NAME", proj.getName());
 
 
-
-
                     v.getContext().startActivity(intent);
                 }else {
                     Toast.makeText(v.getContext(), "You can only edit the membership of your own project.", Toast.LENGTH_LONG).show();
                 }
 
             }
+
         });
 
         holder.itemView.setOnClickListener(new View.OnClickListener(){

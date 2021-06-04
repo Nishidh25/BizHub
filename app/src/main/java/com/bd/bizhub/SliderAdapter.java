@@ -28,7 +28,7 @@ public class SliderAdapter extends PagerAdapter {
 
     // Change Headings and description here
     public String[] slide_headings={ "Welcome to BizHub","Choose your preferred colour","Let’s get started!"};
-    public String[] slide_descriptions={ "Desc 1", "Desc 2", "Desc 3"};
+    public String[] slide_descriptions={ "Project Management App", "Select a dark or light theme", "Do you have a account"};
 
     // Page count based on headings length
     @Override
