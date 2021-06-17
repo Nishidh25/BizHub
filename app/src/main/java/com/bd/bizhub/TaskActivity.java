@@ -89,7 +89,10 @@ public class TaskActivity extends AppCompatActivity {
             View viewInflated = getLayoutInflater().inflate(R.layout.alert_create_task, null);
 
             TextInputLayout input = viewInflated.findViewById(R.id.input);
+            TextInputLayout input2 = viewInflated.findViewById(R.id.input2);
             EditText inputET = input.getEditText();
+            EditText input2ET = input2.getEditText();
+
 
             builder.setView(viewInflated);
 
@@ -99,7 +102,7 @@ public class TaskActivity extends AppCompatActivity {
             // add a button
             builder.setPositiveButton("Create", (dialog, which) -> {
                 // Close
-                Task task = new Task(inputET.getText().toString());
+                Task task = new Task(inputET.getText().toString(), input2ET.getText().toString());
                 Log.d("Input Text","Input Task Name -------- "+inputET.getText().toString());
 
                 projectRealm.executeTransactionAsync(new Realm.Transaction() {

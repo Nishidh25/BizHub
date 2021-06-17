@@ -1,6 +1,8 @@
 package com.bd.bizhub.ui.home;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,6 +59,9 @@ public class HomeFragment extends Fragment {
     public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        SharedPreferences sharedPref = getActivity().getSharedPreferences("Uname",Context.MODE_PRIVATE);
+
+        String Uname = sharedPref.getString("Uname", "NULL");
 
          app = ((RealmDb) getActivity().getApplication()).getApp();
 

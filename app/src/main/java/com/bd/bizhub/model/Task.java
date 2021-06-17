@@ -18,16 +18,19 @@ public class Task extends RealmObject {
     private ObjectId id;
     @Required
     private String name;
+    @Required
+    private String description;
     private String owner;
     @Required
     private String status;
 
     public Task() { }
 
-    public Task(@NotNull String name) {
+    public Task(@NotNull String name, String description) {
         super();
         this.id = new ObjectId();
         this.name = name;
+        this.description = description;
         this.status = TaskStatus.Open.name();
     }
 
@@ -52,6 +55,8 @@ public class Task extends RealmObject {
     public void set_id(ObjectId id) { this.id = id; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
     public String getOwner() { return owner; }
     public void setOwner(String owner) { this.owner = owner; }
     public String getStatus() { return status; }

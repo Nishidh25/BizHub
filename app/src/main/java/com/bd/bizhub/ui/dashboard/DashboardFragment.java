@@ -139,7 +139,7 @@ public class DashboardFragment extends Fragment {
 
             Realm fakeRealm = Realm.getDefaultInstance();
 
-            projectsList = new RealmList<Project>();
+            projectsList = new RealmList<>();
             fakeCustomUserData = fakeRealm.where(com.bd.bizhub.model.User.class).findFirst();
 
 

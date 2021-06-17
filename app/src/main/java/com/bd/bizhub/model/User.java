@@ -18,6 +18,8 @@ public class User extends RealmObject {
     private RealmList<Project> memberOf;
     @Required
     private String name;
+
+   // private String Full_name;
     public User() { }
 
 

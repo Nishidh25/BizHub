@@ -53,6 +53,7 @@ public class TaskAdapter extends RealmRecyclerViewAdapter<Task, TaskAdapter.Task
         Task obj = getItem(position);
         holder.setData(obj);
         holder.getName().setText(obj.getName());
+        holder.getDescription().setText(obj.getDescription());
         holder.getStatus().setText(obj.getStatusEnum().getDisplayName());
 
         holder.itemView.setOnClickListener(new View.OnClickListener(){
@@ -158,6 +159,8 @@ public class TaskAdapter extends RealmRecyclerViewAdapter<Task, TaskAdapter.Task
         @NotNull
         private TextView name;
         @NotNull
+        private TextView description;
+        @NotNull
         private TextView status;
         @Nullable
         private Task data;
@@ -167,6 +170,11 @@ public class TaskAdapter extends RealmRecyclerViewAdapter<Task, TaskAdapter.Task
         @NotNull
         public final TextView getName() {
             return this.name;
+        }
+
+        @NotNull
+        public final TextView getDescription() {
+            return this.description;
         }
 
         public final void setName(@NotNull TextView var1) {
@@ -203,6 +211,7 @@ public class TaskAdapter extends RealmRecyclerViewAdapter<Task, TaskAdapter.Task
         public TaskViewHolder(@NotNull View view) {
             super(view);
             this.name = view.findViewById(R.id.name);
+            this.description = view.findViewById(R.id.description);
             this.status = view.findViewById(R.id.status);
             this.menu = view.findViewById(R.id.menu);
         }

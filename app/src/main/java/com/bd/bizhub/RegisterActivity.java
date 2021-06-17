@@ -1,6 +1,8 @@
 package com.bd.bizhub;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -41,6 +43,9 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.fragment_register);
 
 
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                "Uname", Context.MODE_PRIVATE);
+
         realm = Realm.getDefaultInstance();
         Log.e("EXAMPLE", "Successfully opened a realm at: " + realm.getPath());
 
@@ -59,15 +64,15 @@ public class RegisterActivity extends AppCompatActivity {
             EditText passwordET = passwordTV.getEditText();
             EditText nameET = nameTV.getEditText();
 
-            if (nameET.length() == 0) {
-                showSnackBar("Enter Name");
-                nameET.requestFocus();
-            } else if (emailET.length() ==0) {
+            if (emailET.length() ==0) {
                 showSnackBar("Enter a valid email");
                 emailET.requestFocus();
             }else if (passwordET.length() ==0) {
                 showSnackBar("Enter a valid password");
                 passwordET.requestFocus();
+            }else if (nameET.length() == 0) {
+            showSnackBar("Enter Name");
+            nameET.requestFocus();
             }
             else {
 
@@ -83,13 +88,16 @@ public class RegisterActivity extends AppCompatActivity {
                             Log.v("AUTH", "Successfully created User");
                             showSnackBar("Successfully created user");
                             user.set(app.currentUser());
+                            SharedPreferences.Editor editor = sharedPref.edit();
+                            editor.putString("Uname",nameET.getText().toString());
+                            editor.apply();
 
-                         //   Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
-                         //   i.putExtra("Registering",true);
-                          //  i.putExtra("email",emailET.getText().toString());
-                          //  i.putExtra("pass", passwordET.getText().toString());
+                            Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+                            i.putExtra("Registering",true);
+                            i.putExtra("email",emailET.getText().toString());
+                            i.putExtra("pass", passwordET.getText().toString());
 
-                         //   startActivity(i);
+                            startActivity(i);
                         } else {
                             Log.e("AUTH", it.getError().toString());
                         }

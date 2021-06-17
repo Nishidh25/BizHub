@@ -39,7 +39,6 @@ import io.realm.mongodb.sync.SyncConfiguration;
 
 public class MemberAdapter extends RealmRecyclerViewAdapter<Member, MemberAdapter.MemberViewHolder> {
     @NotNull
-    RealmDb app;
     private ArrayList<Member> data;
     private io.realm.mongodb.User user;
     ViewGroup parent;
