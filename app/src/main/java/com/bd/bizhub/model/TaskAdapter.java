@@ -155,6 +155,9 @@ public class TaskAdapter extends RealmRecyclerViewAdapter<Task, TaskAdapter.Task
 
 
 
+
+
+
     public final class TaskViewHolder extends RecyclerView.ViewHolder {
         @NotNull
         private TextView name;

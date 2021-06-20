@@ -1,6 +1,5 @@
 package com.bd.bizhub.ui.dashboard;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,35 +9,26 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.os.BuildCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bd.bizhub.BuildConfig;
-import com.bd.bizhub.LoginActivity;
 import com.bd.bizhub.R;
 import com.bd.bizhub.RealmDb;
-import com.bd.bizhub.databinding.FragmentHomeBinding;
 import com.bd.bizhub.model.Project;
 import com.bd.bizhub.model.ProjectAdapter;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import com.bd.bizhub.model.Task;
+import com.bd.bizhub.ui.profile.ProfileFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import io.realm.OrderedCollectionChangeSet;
 import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 import io.realm.mongodb.App;
-import io.realm.mongodb.AppConfiguration;
 import io.realm.mongodb.User;
 import io.realm.mongodb.sync.SyncConfiguration;
-import kotlin.jvm.internal.Intrinsics;
-import kotlin.jvm.internal.Ref;
 
 public class DashboardFragment extends Fragment {
 
@@ -51,6 +41,7 @@ public class DashboardFragment extends Fragment {
     RealmList<Project> projectsList;
     com.bd.bizhub.model.User fakeCustomUserData;
     App app;
+    FloatingActionButton create;
 
     @Override
     public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -76,6 +67,7 @@ public class DashboardFragment extends Fragment {
 
 
         TextView textName = root.findViewById(R.id.text_dashboard);
+        create = root.findViewById(R.id.fab_create_project);
 
         textName.setText("Projects you're in");
 
@@ -83,17 +75,22 @@ public class DashboardFragment extends Fragment {
         config = new SyncConfiguration.Builder(user, "user="+user.getId())
                 .build();
 
+
         // Sync all realm changes via a new instance, and when that instance has been successfully created connect it to an on-screen list (a recycler view)
         Realm.getInstanceAsync(config, new Realm.Callback() {
             @Override
             public void onSuccess(Realm realm) {
                 userRealm = realm;
+
                 setUpRecyclerView(getProjects(realm));
+
+
             }
         });
 
-
-
+        create.setOnClickListener( v->{
+            createProjects("hahah");
+        });
 
         return root;
     }
@@ -113,7 +110,11 @@ public class DashboardFragment extends Fragment {
         // if a user object exists, create the recycler view and the corresponding adapter
         if (syncedUser != null) {
             Log.d("TAG", " syncd if execute else: " + syncedUser.getMemberOf().toString() );
-            return syncedUser.getMemberOf();
+            projectsList =  syncedUser.getMemberOf();
+
+
+
+            return projectsList;
 
         }else {
             // since a trigger creates our user object after initial signup, the object might not exist immediately upon first login.
@@ -149,18 +150,57 @@ public class DashboardFragment extends Fragment {
                         fakeCustomUserData = it.createObject(com.bd.bizhub.model.User.class,user.getId());
                         projectsList = fakeCustomUserData.getMemberOf();
                         projectsList.add(new Project("My Project", "project="+user.getId()));
+
+                     //   projectsList.add(new Project("aaaaaaaaaaaaaaa", "project="+user.getId()));
+
                         Log.d("TAG", "fake execute if: " + projectsList.stream().toString() );
                     }
                 }));
             } else {
-
                 projectsList = fakeCustomUserData.getMemberOf();
                 Log.d("TAG", " fake execute else: " + projectsList.stream().toString() );
             }
-            //fakeRealm.close();
+            fakeRealm.close();
+
             return projectsList;
 
         }
+    }
+
+
+
+
+
+    private void createProjects(String proj_name){
+
+        SyncConfiguration config = new SyncConfiguration.Builder(user,"user="+user.getId())
+                .build();
+        Realm realm = Realm.getInstance(config);
+
+        realm.executeTransactionAsync((Realm.Transaction)(new Realm.Transaction() {
+            public final void execute(Realm it) {
+
+                Log.d("ABD",user.getId());
+                fakeCustomUserData = it.where(com.bd.bizhub.model.User.class).equalTo("_id", user.getId()).findFirst();
+                projectsList = fakeCustomUserData.getMemberOf();
+                projectsList.add(new Project(proj_name, "project="+user.getId()+ proj_name));
+                getActivity().runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        // Stuff that updates the UI
+                        projectAdapter.notifyDataSetChanged();
+                    }
+                });
+
+
+
+
+            }
+        }));
+        realm.close();
+
     }
 
 
@@ -175,7 +215,6 @@ public class DashboardFragment extends Fragment {
         recyclerView.setAdapter(projectAdapter);
         recyclerView.setHasFixedSize(true);
         projectAdapter.notifyDataSetChanged();
-
 
 
 
@@ -197,6 +236,7 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
         if(userRealm == null){
           //  userRealm = Realm.getDefaultInstance();
         }

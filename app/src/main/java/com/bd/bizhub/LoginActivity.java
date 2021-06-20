@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                     Log.v("AUTH", "Successfully authenticated using an email and password.");
                     //showSnackBar("Login Success");
                     user.set(app.currentUser());
-                    Intent i = new Intent(LoginActivity.this, NavigationActivity.class);
+                    Intent i = new Intent(LoginActivity.this, NavigationActivity.class); //----------+++++++++++++
                     startActivity(i);
 
                 }
@@ -139,7 +139,7 @@ public class LoginActivity extends AppCompatActivity {
                         Log.v("AUTH", "Successfully authenticated using an email and password.");
                         showSnackBar("Login Success");
                         user.set(app.currentUser());
-                        Intent i = new Intent(LoginActivity.this, NavigationActivity.class);
+                        Intent i = new Intent(LoginActivity.this, NavigationActivity.class); //++++++++++++____________
                         startActivity(i);
 
                     }
@@ -238,7 +238,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (it.isSuccess()) {
                     Log.v("AUTH", "Successfully logged in to MongoDB Realm using Google OAuth.");
                     user.set(app.currentUser());
-                    Intent intent = new Intent(LoginActivity.this, NavigationActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, NavigationActivity.class);  //++++______________
                     startActivity(intent);
 
 

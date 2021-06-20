@@ -24,6 +24,7 @@
             </intent-filter>
         </activity>
 
+
         <activity android:name = ".NavigationActivity"
             android:theme="@style/Theme.BizHub.NoActionBar"
             android:label="@string/title_activity_navigation"

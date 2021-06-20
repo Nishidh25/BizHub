@@ -109,6 +109,7 @@ public class ProjectAdapter extends RealmRecyclerViewAdapter<Project, ProjectAda
             }
         });
 
+
     }
 
     @Override

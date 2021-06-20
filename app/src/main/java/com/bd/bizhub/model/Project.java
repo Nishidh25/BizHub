@@ -14,11 +14,9 @@ public class Project extends RealmObject {
     private String name;
     @Nullable
     private String partition;
-   // private ObjectId id;
     public Project(String name,String partition){
         this.name = name;
         this.partition = partition;
-      //  this.id = new ObjectId();
     }
     // Standard getters & setters
     public Project(){}
