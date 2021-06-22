@@ -7,11 +7,10 @@
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/input"
+        android:id="@+id/input_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Task Name"
-        android:paddingBottom="100dp">
+        android:hint="Project Name">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -20,17 +19,6 @@
             android:paddingRight="10dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/input2"
-        android:layout_width="match_parent"
-        android:layout_height="90dp"
-        android:layout_gravity="bottom"
-        android:hint="Task Description">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="78dp" />
-    </com.google.android.material.textfield.TextInputLayout>
 
 
 </FrameLayout>

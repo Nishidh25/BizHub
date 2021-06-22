@@ -67,12 +67,6 @@ public class HomeFragment extends Fragment {
 
         user = app.currentUser();
 
-     //   if(userRealm == null){
-     //       userRealm = Realm.getDefaultInstance();
-        //}
-
-    //    Log.e("EXAMPLE", "Successfully opened a realm at: " + userRealm.getPath());
-
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -86,7 +80,7 @@ public class HomeFragment extends Fragment {
         CardView card_faq = root.findViewById(R.id.card_faq);
         CardView card_more = root.findViewById(R.id.card_more);
         TextView name = root.findViewById(R.id.textViewName);
-        name.setText(user.getId());
+        name.setText(user.getCustomData().get("name","Null"));
 
 
         card_workspace.setOnClickListener( v-> {

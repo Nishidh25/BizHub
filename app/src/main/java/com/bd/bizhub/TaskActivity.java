@@ -75,8 +75,10 @@ public class TaskActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_notifications);
+        setContentView(R.layout.item_task);
         getSupportActionBar().setTitle("Tasks");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         recyclerView = findViewById(R.id.task_list);
         fab = findViewById(R.id.floating_action_button);
 
@@ -125,6 +127,12 @@ public class TaskActivity extends AppCompatActivity {
 
         });
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private final void setUpRecyclerView(Realm realm, User user, String partition) {

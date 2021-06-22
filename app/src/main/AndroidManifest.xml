@@ -9,10 +9,11 @@
     <application
         android:name=".RealmDb"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/bizhub"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/bizhub"
         android:supportsRtl="true"
+        android:windowSoftInputMode="stateAlwaysHidden"
         android:theme="@style/Theme.BizHub">
         <activity
             android:name=".OnboardingActivity"
@@ -52,7 +53,17 @@
 
          android:screenOrientation="portrait" />
 
+        <activity android:name = ".ui.notes.NoteEditorActivity"
 
- </application>
+            android:screenOrientation="portrait" />
+
+
+        <activity android:name = ".ui.settings.SettingsActivity"
+
+            android:screenOrientation="portrait" />
+
+
+
+    </application>
 
 </manifest>

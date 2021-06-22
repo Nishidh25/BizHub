@@ -58,4 +58,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'io.realm:android-adapters:4.0.0'
     implementation "io.realm:realm-gradle-plugin:10.4.0"
+    implementation 'androidx.preference:preference:1.1.1'
 }

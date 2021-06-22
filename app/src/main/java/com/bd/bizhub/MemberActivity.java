@@ -63,8 +63,10 @@ public class MemberActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member);
         getSupportActionBar().setTitle("Members");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         recyclerView = findViewById(R.id.project_users_list);
         fab = findViewById(R.id.floating_action_button);
+
 
         fab.setOnClickListener(v -> {
 
@@ -115,6 +117,12 @@ public class MemberActivity extends AppCompatActivity {
 
         });
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private final void setUpRecyclerView() {

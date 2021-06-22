@@ -107,7 +107,7 @@ tools:context="ui.profile.ProfileFragment">
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/height"
+        android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Email"
@@ -123,7 +123,7 @@ tools:context="ui.profile.ProfileFragment">
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/weight"
+        android:id="@+id/phone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:hint="Phone"

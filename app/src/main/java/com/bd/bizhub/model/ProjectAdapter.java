@@ -50,7 +50,7 @@ public class ProjectAdapter extends RealmRecyclerViewAdapter<Project, ProjectAda
     @NotNull
     @Override
     public ProjectViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_view, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_project, parent, false);
         return new ProjectViewHolder(itemView);
     }
 
@@ -59,12 +59,13 @@ public class ProjectAdapter extends RealmRecyclerViewAdapter<Project, ProjectAda
         Project proj = project.get(position);
         holder.setData(proj);
         holder.getName().setText(proj.getName());
-        // ensure that this view is always visible when bound, since it is sometimes invisible
-        holder.getMenu().setVisibility(View.VISIBLE);
+        // ensure that this view is always Invisible when bound, since it is sometimes visible
+        holder.getMenu().setVisibility(View.INVISIBLE);
+
         // if the project described by this view is NOT the user's project, hide the menu button
 
-        if (!proj.getPartition().equals("project="+user.getId().toString())) {
-            holder.getMenu().setVisibility(View.INVISIBLE);
+        if (proj.getPartition().contains("project="+user.getId().toString())) {
+            holder.getMenu().setVisibility(View.VISIBLE);
         }
 
         //Menu On click -> to members
@@ -73,7 +74,7 @@ public class ProjectAdapter extends RealmRecyclerViewAdapter<Project, ProjectAda
             public void onClick(View v) {
                 Log.v("Opening Members", "Opening membership for project: "+proj.getPartition());
 
-                if (proj.getPartition().equals("project="+user.getId().toString())){
+                if (proj.getPartition().contains("project="+user.getId().toString())){
                     Intent intent = new Intent(v.getContext(), MemberActivity.class);
 
                     intent.putExtra("PARTITION", proj.getPartition());
@@ -93,7 +94,7 @@ public class ProjectAdapter extends RealmRecyclerViewAdapter<Project, ProjectAda
 
         });
 
-        holder.itemView.setOnClickListener(new View.OnClickListener(){
+        holder.itemView.findViewById(R.id.linearLayout2).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 Log.v("Opening Tasks", "Opening Tasks");
@@ -167,9 +168,9 @@ public class ProjectAdapter extends RealmRecyclerViewAdapter<Project, ProjectAda
         public ProjectViewHolder(View view) {
             super(view);
 
-            this.name =  view.findViewById(R.id.name);
+            this.name =  view.findViewById(R.id.item_project_title);
 
-            this.status = view.findViewById(R.id.status);
+            this.status = view.findViewById(R.id.item_status);
 
             this.menu = view.findViewById(R.id.menu);
 

@@ -1,15 +1,19 @@
-package com.bd.bizhub.ui.dashboard;
+package com.bd.bizhub.ui.workspace;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,8 +22,8 @@ import com.bd.bizhub.RealmDb;
 import com.bd.bizhub.model.Project;
 import com.bd.bizhub.model.ProjectAdapter;
 import com.bd.bizhub.model.Task;
-import com.bd.bizhub.ui.profile.ProfileFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
 
 import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
@@ -30,7 +34,7 @@ import io.realm.mongodb.App;
 import io.realm.mongodb.User;
 import io.realm.mongodb.sync.SyncConfiguration;
 
-public class DashboardFragment extends Fragment {
+public class WorkspaceFragment extends Fragment {
 
     User user;
     Realm userRealm;
@@ -89,7 +93,33 @@ public class DashboardFragment extends Fragment {
         });
 
         create.setOnClickListener( v->{
-            createProjects("hahah");
+
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            View viewInflated = getLayoutInflater().inflate(R.layout.alert_create_proj, null);
+
+            TextInputLayout input = viewInflated.findViewById(R.id.input_name);
+            EditText inputET = input.getEditText();
+
+            builder.setView(viewInflated);
+
+            builder.setTitle("Enter Project name:");
+
+            builder.setCancelable(true);
+            // add a button
+            builder.setPositiveButton("Create", (dialog, which) -> {
+                // Close
+
+                createProjects(inputET.getText().toString());
+
+                dialog.dismiss();
+            });
+
+            builder.setNegativeButton("Cancel", (dialog, which) -> {
+                dialog.cancel();
+            });
+            builder.show();
+
         });
 
         return root;
@@ -111,8 +141,6 @@ public class DashboardFragment extends Fragment {
         if (syncedUser != null) {
             Log.d("TAG", " syncd if execute else: " + syncedUser.getMemberOf().toString() );
             projectsList =  syncedUser.getMemberOf();
-
-
 
             return projectsList;
 
@@ -149,7 +177,12 @@ public class DashboardFragment extends Fragment {
                     public final void execute(Realm it) {
                         fakeCustomUserData = it.createObject(com.bd.bizhub.model.User.class,user.getId());
                         projectsList = fakeCustomUserData.getMemberOf();
-                        projectsList.add(new Project("My Project", "project="+user.getId()));
+                        projectsList.add(new Project("Example Project", "project="+user.getId()));
+
+
+
+
+
 
                      //   projectsList.add(new Project("aaaaaaaaaaaaaaa", "project="+user.getId()));
 
@@ -201,6 +234,14 @@ public class DashboardFragment extends Fragment {
         }));
         realm.close();
 
+
+    }
+
+
+    private void deleteProjects(Integer proj_pos){
+
+
+
     }
 
 
@@ -212,7 +253,58 @@ public class DashboardFragment extends Fragment {
         Log.d("Proj_list",""+projectsList.toString());
         projectAdapter = new ProjectAdapter(null,true,projectsList, user, getContext());
 
+
         recyclerView.setAdapter(projectAdapter);
+
+        ItemTouchHelper helper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(0,
+                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                    @Override
+                    public boolean onMove(RecyclerView recyclerView,
+                                          RecyclerView.ViewHolder viewHolder,
+                                          RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder,
+                                         int direction) {
+                        int position = viewHolder.getAdapterPosition();
+
+
+                        SyncConfiguration config = new SyncConfiguration.Builder(user,"user="+user.getId())
+                                .build();
+                        Realm realm = Realm.getInstance(config);
+
+                        realm.executeTransactionAsync((Realm.Transaction)(new Realm.Transaction() {
+                            public final void execute(Realm it) {
+
+                                Log.d("ABD",user.getId());
+                                fakeCustomUserData = it.where(com.bd.bizhub.model.User.class).equalTo("_id", user.getId()).findFirst();
+                                RealmList<Project> projectsList1 = fakeCustomUserData.getMemberOf();
+                                projectsList1.remove(position);
+
+                                getActivity().runOnUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+
+                                        // Stuff that updates the UI
+                                        projectAdapter.notifyDataSetChanged();
+                                    }
+                                });
+
+                            }
+                        }));
+                        realm.close();
+
+                        Toast.makeText(getContext(), "Deleted at position: " +
+                                position, Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        helper.attachToRecyclerView(recyclerView);
+
         recyclerView.setHasFixedSize(true);
         projectAdapter.notifyDataSetChanged();
 
