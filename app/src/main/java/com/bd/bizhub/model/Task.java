@@ -31,6 +31,7 @@ public class Task extends RealmObject {
         this.id = new ObjectId();
         this.name = name;
         this.description = description;
+
         this.status = TaskStatus.Open.name();
     }
 

@@ -19,6 +19,7 @@ public class User extends RealmObject {
     @Required
     private String name;
 
+
    // private String Full_name;
     public User() { }
 
@@ -33,4 +34,5 @@ public class User extends RealmObject {
     public void setMemberOf(RealmList memberOf) { this.memberOf = memberOf; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+
 }

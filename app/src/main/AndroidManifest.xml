@@ -30,7 +30,7 @@
             android:theme="@style/Theme.BizHub.NoActionBar"
             android:label="@string/title_activity_navigation"
 
-            android:windowSoftInputMode="stateVisible|adjustPan"
+
             android:screenOrientation="portrait" />
 
 

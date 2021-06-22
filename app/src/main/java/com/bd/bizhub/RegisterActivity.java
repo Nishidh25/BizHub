@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -52,7 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         TextInputLayout emailTV = findViewById(R.id.Email);
         TextInputLayout passwordTV = findViewById(R.id.Password);
-        TextInputLayout nameTV = findViewById(R.id.Name);
+        TextInputLayout Cfrm_passwordTV = findViewById(R.id.Password_confirm);
 
         mButtonSignUp = findViewById(R.id.button_ereg);
 
@@ -62,17 +64,22 @@ public class RegisterActivity extends AppCompatActivity {
 
             EditText emailET = emailTV.getEditText();
             EditText passwordET = passwordTV.getEditText();
-            EditText nameET = nameTV.getEditText();
+            EditText Cfrm_passwordET = Cfrm_passwordTV.getEditText();
 
-            if (emailET.length() ==0) {
+            String password = passwordET.getText().toString();
+            String cpswd =  Cfrm_passwordET.getText().toString();
+
+            if (emailET.length() ==0 || !isValidEmail(emailET.getText())) {
                 showSnackBar("Enter a valid email");
                 emailET.requestFocus();
             }else if (passwordET.length() ==0) {
                 showSnackBar("Enter a valid password");
                 passwordET.requestFocus();
-            }else if (nameET.length() == 0) {
-            showSnackBar("Enter Name");
-            nameET.requestFocus();
+            }else if (Cfrm_passwordET.length() == 0) {
+                showSnackBar("Re enter your password");
+                Cfrm_passwordET.requestFocus();
+            }else if(!password.equals(cpswd)){
+                showSnackBar("Passwords do not match");
             }
             else {
 
@@ -88,9 +95,6 @@ public class RegisterActivity extends AppCompatActivity {
                             Log.v("AUTH", "Successfully created User");
                             showSnackBar("Successfully created user");
                             user.set(app.currentUser());
-                            SharedPreferences.Editor editor = sharedPref.edit();
-                            editor.putString("Uname",nameET.getText().toString());
-                            editor.apply();
 
                             Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
                             i.putExtra("Registering",true);
@@ -98,6 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
                             i.putExtra("pass", passwordET.getText().toString());
 
                             startActivity(i);
+                            RegisterActivity.this.finish();
                         } else {
                             Log.e("AUTH", it.getError().toString());
                         }
@@ -114,6 +119,10 @@ public class RegisterActivity extends AppCompatActivity {
 
       //  realm.close();
 
+    }
+
+    public static boolean isValidEmail(CharSequence target) {
+        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 
     private void showSnackBar(String msg) {

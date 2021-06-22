@@ -57,10 +57,10 @@ tools:context="ui.profile.ProfileFragment">
     android:padding="10dp">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/full_name_profile"
+        android:id="@+id/user_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Full Name"
+        android:hint="User id"
         android:paddingTop="10dp"
         android:enabled="false"
         android:paddingBottom="10dp">

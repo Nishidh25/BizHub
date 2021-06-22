@@ -70,11 +70,13 @@
 
     <TextView
         android:id="@+id/textViewName"
-        android:layout_width="291dp"
-        android:layout_height="41dp"
+        android:layout_width="0dp"
+        android:layout_height="38dp"
         android:gravity="center|left"
-        android:text="Hello Nishidh"
-        android:textSize="24sp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:text="Hello "
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.191"

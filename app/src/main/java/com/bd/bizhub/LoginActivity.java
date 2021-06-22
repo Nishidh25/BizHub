@@ -3,7 +3,9 @@ package com.bd.bizhub;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -67,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         if (reg == true){
 
 
-
+            setContentView(R.layout.loading);
             Credentials emailPasswordCredentials = Credentials.emailPassword(getIntent().getStringExtra("email"),getIntent().getStringExtra("pass"));
 
             AtomicReference<User> user = new AtomicReference<>();
@@ -82,10 +84,11 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else {
                     Log.e("AUTH", it.getError().toString());
-                   // showSnackBar("Login Failed: "+it.getError().toString());
+                    //showSnackBar("Login Failed: "+it.getError().toString());
                 }
             });
 
+            return;
 
         }
 
@@ -116,42 +119,37 @@ public class LoginActivity extends AppCompatActivity {
                 EditText passwordET = passwordTV.getEditText();
 
                // assert emailET != null;
-                if (emailET.length() == 0) {
+                if (emailET.length() == 0 && !isValidEmail(emailET.getText().toString())) {
                     showSnackBar("Enter EMAIL");
                     emailET.requestFocus();
-                } else {
-               //     assert passwordET != null;
-                    if (passwordET.length() == 0) {
+                } else  if (passwordET.length() == 0) {
                         showSnackBar("Enter password");
                         passwordET.requestFocus();
 
-                    }
+                } else {
+                    //    App app = ((RealmDb) LoginActivity.this.getApplication()).getApp();
+
+                    Credentials emailPasswordCredentials = Credentials.emailPassword(emailET.getText().toString(),passwordET.getText().toString());
+
+                    AtomicReference<User> user = new AtomicReference<>();
+                    app.loginAsync(emailPasswordCredentials, it -> {
+                        if (it.isSuccess()) {
+                            Log.v("AUTH", "Successfully authenticated using an email and password.");
+                            showSnackBar("Login Success");
+                            user.set(app.currentUser());
+                            Intent i = new Intent(LoginActivity.this, NavigationActivity.class); //++++++++++++____________
+                            startActivity(i);
+
+                        }
+                        else {
+                            Log.e("AUTH", it.getError().toString());
+                            showSnackBar("Login Failed: "+it.getError().toString());
+                        }
+                    });
+
                 }
 
-
-            //    App app = ((RealmDb) LoginActivity.this.getApplication()).getApp();
-
-                Credentials emailPasswordCredentials = Credentials.emailPassword(emailET.getText().toString(),passwordET.getText().toString());
-
-                AtomicReference<User> user = new AtomicReference<>();
-                app.loginAsync(emailPasswordCredentials, it -> {
-                    if (it.isSuccess()) {
-                        Log.v("AUTH", "Successfully authenticated using an email and password.");
-                        showSnackBar("Login Success");
-                        user.set(app.currentUser());
-                        Intent i = new Intent(LoginActivity.this, NavigationActivity.class); //++++++++++++____________
-                        startActivity(i);
-
-                    }
-                    else {
-                        Log.e("AUTH", it.getError().toString());
-                        showSnackBar("Login Failed: "+it.getError().toString());
-                    }
-                });
-
             }
-
-
 
             private void showSnackBar(String msg) {
                 try {
@@ -181,35 +179,16 @@ public class LoginActivity extends AppCompatActivity {
                 //.requestIdToken(serverClientId)
                 .requestEmail()
                 .build();
-       // GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-       //         .requestEmail()
-       //         .build();
+
         GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, gso);
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, 123);
-      //  startActivityForResult(signInIntent, RC_SIGN_IN); // RC_SIGN_IN lets onActivityResult identify the result of THIS call
 
-    /*    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            // There are no request codes
-                            Intent data = result.getData();
-                            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-                            handleSignInResult(task);
-
-                        }
-                    }
-                });
-
-        someActivityResultLauncher.launch(signInIntent);
-
-     */
     }
 
+    public static boolean isValidEmail(CharSequence target) {
+        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

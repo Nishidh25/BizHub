@@ -85,6 +85,17 @@ public class NavigationActivity extends AppCompatActivity {
             //   Intent intent = new Intent(this, RegisterActivity.class);
             //   startActivity(intent);
 
+
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+               // sendIntent.putExtra(Intent.EXTRA_TEXT, message);
+                sendIntent.setType("text/plain");
+                sendIntent.setPackage("com.whatsapp");
+                if (sendIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(sendIntent);
+                }
+
+
             return false;
         });
 

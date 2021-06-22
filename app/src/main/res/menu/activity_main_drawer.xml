@@ -20,7 +20,7 @@
             android:id="@+id/navigation_notifications"
             android:icon="@drawable/anim_calander"
             android:checkable="true"
-            android:title="Tasks" />
+            android:title="Notes" />
 
 
         <item

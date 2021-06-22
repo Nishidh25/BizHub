@@ -20,7 +20,7 @@
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.bd.bizhub.ui.notes.NotesFragment"
-        android:label="Tasks"
+        android:label="Notes"
         tools:layout="@layout/fragment_notes" />
     <fragment
         android:id="@+id/navigation_profile"

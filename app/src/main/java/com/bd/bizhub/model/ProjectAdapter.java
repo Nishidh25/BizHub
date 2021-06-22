@@ -59,8 +59,12 @@ public class ProjectAdapter extends RealmRecyclerViewAdapter<Project, ProjectAda
         Project proj = project.get(position);
         holder.setData(proj);
         holder.getName().setText(proj.getName());
+        holder.getDescription().setText(proj.getDescription());
+        holder.getStatus().setText(proj.getCreated());
+
         // ensure that this view is always Invisible when bound, since it is sometimes visible
         holder.getMenu().setVisibility(View.INVISIBLE);
+
 
         // if the project described by this view is NOT the user's project, hide the menu button
 
@@ -126,6 +130,9 @@ public class ProjectAdapter extends RealmRecyclerViewAdapter<Project, ProjectAda
         private TextView status;
         @Nullable
         private Project data;
+        @Nullable
+        private TextView description;
+
         @NotNull
         private TextView menu;
 
@@ -156,6 +163,16 @@ public class ProjectAdapter extends RealmRecyclerViewAdapter<Project, ProjectAda
             this.data = var1;
         }
 
+        @Nullable
+        public final TextView getDescription() {
+            return this.description;
+        }
+
+        public final void setDescription(@Nullable TextView var1) {
+            this.description = var1;
+        }
+
+
         @NotNull
         public final TextView getMenu() {
             return this.menu;
@@ -171,6 +188,8 @@ public class ProjectAdapter extends RealmRecyclerViewAdapter<Project, ProjectAda
             this.name =  view.findViewById(R.id.item_project_title);
 
             this.status = view.findViewById(R.id.item_status);
+
+            this.description = view.findViewById(R.id.item_description);
 
             this.menu = view.findViewById(R.id.menu);
 

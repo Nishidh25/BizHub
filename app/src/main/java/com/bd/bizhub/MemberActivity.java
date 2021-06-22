@@ -3,7 +3,9 @@ package com.bd.bizhub;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -18,6 +20,7 @@ import com.bd.bizhub.model.MemberAdapter;
 import com.bd.bizhub.model.Task;
 import com.bd.bizhub.model.TaskAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.bson.Document;
@@ -74,9 +77,9 @@ public class MemberActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
 
-            View viewInflated = getLayoutInflater().inflate(R.layout.alert_create_task, null);
+            View viewInflated = getLayoutInflater().inflate(R.layout.alert_add_member, null);
 
-            TextInputLayout input = viewInflated.findViewById(R.id.input);
+            TextInputLayout input = viewInflated.findViewById(R.id.input_email);
             EditText inputET = input.getEditText();
 
             builder.setView(viewInflated);
@@ -95,17 +98,25 @@ public class MemberActivity extends AppCompatActivity {
                     User user = app.currentUser();
                     assert user != null;
                     Functions functionsManager = app.getFunctions(user);
-                    List<String> args = Arrays.asList(inputET.getText().toString());
-                    functionsManager.callFunctionAsync("addTeamMember", args, Document.class, result -> {
-                        builder.create().dismiss();
-                        if (result.isSuccess()) {
-                            Log.v("Add Success", "Attempted to add team member:  " + result.get());
-                            setUpRecyclerView();
-                        } else {
-                            Toast.makeText(v.getContext(), result.getError().toString(), Toast.LENGTH_LONG).show();
-                            Log.e("Add Fail", "failed to call add function with: " + result.getError());
-                        }
-                    });
+
+
+                    if (inputET.length() == 0 || !isValidEmail(inputET.getText().toString())) {
+                        showSnackBar("Invalid email entered");
+                        inputET.requestFocus();
+                    }else {
+                        List<String> args = Arrays.asList(inputET.getText().toString());
+                        functionsManager.callFunctionAsync("addTeamMember", args, Document.class, result -> {
+                            builder.create().dismiss();
+                            if (result.isSuccess()) {
+                                Log.v("Add Success", "Attempted to add team member:  " + result.get());
+                                setUpRecyclerView();
+                            } else {
+                                Toast.makeText(v.getContext(), result.getError().toString(), Toast.LENGTH_LONG).show();
+                                Log.e("Add Fail", "failed to call add function with: " + result.getError());
+                            }
+                        });
+
+                    }
 
 
                 }
@@ -180,7 +191,18 @@ public class MemberActivity extends AppCompatActivity {
 
     }
 
+    private void showSnackBar(String msg) {
+        try {
+            Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_SHORT).show();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+        }
+    }
 
+    public static boolean isValidEmail(CharSequence target) {
+        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
+    }
     @Override
     protected void onStop() {
         super.onStop();

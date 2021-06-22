@@ -21,13 +21,13 @@ public class SliderAdapter extends PagerAdapter {
         this.context=context;
     }
     public int[] slide_images={
-            R.drawable.ic_home_black_24dp,
-            R.drawable.ic_home_black_24dp,
-            R.drawable.ic_home_black_24dp
+            R.mipmap.bizhub,
+            R.mipmap.bizhub,
+            R.mipmap.bizhub
     };
 
     // Change Headings and description here
-    public String[] slide_headings={ "Welcome to BizHub","Choose your preferred colour","Let’s get started!"};
+    public String[] slide_headings={ "Welcome to BizHub \n Your Workflow, Your customised way","Choose your preferred colour","Let’s get started!"};
     public String[] slide_descriptions={ "Project Management App", "Select a dark or light theme", "Do you have a account"};
 
     // Page count based on headings length

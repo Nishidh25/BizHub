@@ -53,7 +53,7 @@ public class NotesFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_notes, container, false);
 
         TextView textView = root.findViewById(R.id.text_notes);
-        textView.setText("Notes Fragment");
+        textView.setText("Personal Notes");
 
 
 

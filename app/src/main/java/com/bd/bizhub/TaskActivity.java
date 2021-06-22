@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.Navigation;
@@ -20,6 +21,7 @@ import com.bd.bizhub.model.Task;
 import com.bd.bizhub.model.TaskAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 import io.realm.Realm;
@@ -103,19 +105,30 @@ public class TaskActivity extends AppCompatActivity {
             builder.setCancelable(true);
             // add a button
             builder.setPositiveButton("Create", (dialog, which) -> {
-                // Close
-                Task task = new Task(inputET.getText().toString(), input2ET.getText().toString());
-                Log.d("Input Text","Input Task Name -------- "+inputET.getText().toString());
 
-                projectRealm.executeTransactionAsync(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        //Insert task into realm
-                        realm.insert(task);
-                    }
-                });
+                // Validate and create task
+                if (inputET.length() == 0) {
+                    showSnackBar("Enter Task Name");
+                    inputET.requestFocus();
+                } else if (input2ET.length() == 0) {
+                    showSnackBar("Enter the task description");
+                    input2ET.requestFocus();
+                }else {
+                    Task task = new Task(inputET.getText().toString(), input2ET.getText().toString());
+                    Log.d("Input Text","Input Task Name -------- "+inputET.getText().toString());
 
-                dialog.dismiss();
+                    projectRealm.executeTransactionAsync(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            //Insert task into realm
+                            realm.insert(task);
+                        }
+                    });
+
+                    dialog.dismiss();
+                }
+
+
             });
 
             builder.setNegativeButton("Cancel", (dialog, which) -> {
@@ -145,7 +158,14 @@ public class TaskActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
 
     }
-
+    private void showSnackBar(String msg) {
+        try {
+            Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_SHORT).show();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     protected void onStop() {

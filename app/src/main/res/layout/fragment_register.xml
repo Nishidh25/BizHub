@@ -116,10 +116,10 @@
                 app:layout_constraintVertical_bias="0.108" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/Name"
+                android:id="@+id/Password_confirm"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="Name"
+                android:hint="Confirm Password"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -134,7 +134,7 @@
                     android:layout_height="match_parent"
                     android:drawablePadding="10dp"
                     android:ems="10"
-                    android:inputType="text"
+                    android:inputType="textPassword"
                     android:textSize="15sp"
                     app:errorEnabled="true" />
 

@@ -1,11 +1,14 @@
 package com.bd.bizhub.ui.workspace;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +26,13 @@ import com.bd.bizhub.model.Project;
 import com.bd.bizhub.model.ProjectAdapter;
 import com.bd.bizhub.model.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
@@ -47,6 +56,11 @@ public class WorkspaceFragment extends Fragment {
     App app;
     FloatingActionButton create;
 
+
+    private DatePicker datePicker;
+    private Calendar calendar;
+    private TextView dateView;
+    private int year, month, day;
     @Override
     public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,20 +113,33 @@ public class WorkspaceFragment extends Fragment {
             View viewInflated = getLayoutInflater().inflate(R.layout.alert_create_proj, null);
 
             TextInputLayout input = viewInflated.findViewById(R.id.input_name);
+            TextInputLayout input_desc = viewInflated.findViewById(R.id.input_desc);
             EditText inputET = input.getEditText();
+            EditText input_descET = input_desc.getEditText();
 
             builder.setView(viewInflated);
 
-            builder.setTitle("Enter Project name:");
+            builder.setTitle("Adding Project: ");
 
             builder.setCancelable(true);
+
             // add a button
             builder.setPositiveButton("Create", (dialog, which) -> {
-                // Close
 
-                createProjects(inputET.getText().toString());
+                // Validate + Create Project
+                if (inputET.length() == 0) {
+                    showSnackBar("Please enter a unique project name");
+                    inputET.requestFocus();
 
-                dialog.dismiss();
+                }else if (input_descET.length() == 0) {
+                    showSnackBar("Please enter some description");
+                    input_descET.requestFocus();
+                }else {
+                    createProjects(inputET.getText().toString(), input_descET.getText().toString());
+                    dialog.dismiss();
+                }
+
+
             });
 
             builder.setNegativeButton("Cancel", (dialog, which) -> {
@@ -122,7 +149,19 @@ public class WorkspaceFragment extends Fragment {
 
         });
 
+
+
+
         return root;
+    }
+
+    private void showSnackBar(String msg) {
+        try {
+            Snackbar.make(getActivity().getCurrentFocus().findViewById(android.R.id.content), msg, Snackbar.LENGTH_SHORT).show();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private RealmList getProjects(Realm realm) {
@@ -177,7 +216,7 @@ public class WorkspaceFragment extends Fragment {
                     public final void execute(Realm it) {
                         fakeCustomUserData = it.createObject(com.bd.bizhub.model.User.class,user.getId());
                         projectsList = fakeCustomUserData.getMemberOf();
-                        projectsList.add(new Project("Example Project", "project="+user.getId()));
+                        projectsList.add(new Project("Example Project", "project="+user.getId(), "This is an example project. Swipe to delete | Click to see Tasks | Menu to add Members", "Today"));
 
 
 
@@ -204,7 +243,7 @@ public class WorkspaceFragment extends Fragment {
 
 
 
-    private void createProjects(String proj_name){
+    private void createProjects(String proj_name, String proj_desc){
 
         SyncConfiguration config = new SyncConfiguration.Builder(user,"user="+user.getId())
                 .build();
@@ -216,7 +255,13 @@ public class WorkspaceFragment extends Fragment {
                 Log.d("ABD",user.getId());
                 fakeCustomUserData = it.where(com.bd.bizhub.model.User.class).equalTo("_id", user.getId()).findFirst();
                 projectsList = fakeCustomUserData.getMemberOf();
-                projectsList.add(new Project(proj_name, "project="+user.getId()+ proj_name));
+                String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+
+
+
+
+                projectsList.add(new Project(proj_name, "project="+user.getId()+ proj_name, proj_desc, date));
                 getActivity().runOnUiThread(new Runnable() {
 
                     @Override
@@ -238,11 +283,7 @@ public class WorkspaceFragment extends Fragment {
     }
 
 
-    private void deleteProjects(Integer proj_pos){
 
-
-
-    }
 
 
     private final void setUpRecyclerView(RealmList projectsList) {
@@ -333,4 +374,5 @@ public class WorkspaceFragment extends Fragment {
           //  userRealm = Realm.getDefaultInstance();
         }
     }
+
 }
