@@ -16,6 +16,8 @@ A Project Management app for android, written in java
 
 
 # Screenshots
+<img src="https://user-images.githubusercontent.com/25072114/122976227-c607bc80-d3b1-11eb-85cd-4a9f4bac99b8.jpg" width="250" height="500">
+<img src="https://user-images.githubusercontent.com/25072114/122976240-cacc7080-d3b1-11eb-8faa-a23b9f4a56de.jpg" width="250" height="500">
 
 
 
