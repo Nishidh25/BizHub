@@ -24,6 +24,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.bd.bizhub.ui.faq.FaqActivity;
 import com.bd.bizhub.ui.settings.SettingsActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -79,6 +80,15 @@ public class NavigationActivity extends AppCompatActivity {
 
             return false;
         });
+
+        top.add("FAQ").setCheckable(true).setIcon(R.drawable.faq).setOnMenuItemClickListener(item -> {
+
+               Intent intent = new Intent(this, FaqActivity.class);
+               startActivity(intent);
+
+            return false;
+        });
+
 
         top.add("Chat").setCheckable(true).setIcon(R.drawable.ic_baseline_chat_24).setOnMenuItemClickListener(item -> {
 

@@ -29,6 +29,7 @@ import com.bd.bizhub.RealmDb;
 import com.bd.bizhub.databinding.FragmentHomeBinding;
 import com.bd.bizhub.model.Project;
 import com.bd.bizhub.model.ProjectAdapter;
+import com.bd.bizhub.ui.faq.FaqActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.List;
@@ -99,8 +100,8 @@ public class HomeFragment extends Fragment {
 
         card_faq.setOnClickListener( v-> {
 
-            //Intent intent = new Intent(getContext(), FaqActivity.class);
-            //startActivity(intent);
+            Intent intent = new Intent(getContext(), FaqActivity.class);
+            startActivity(intent);
 
         });
 

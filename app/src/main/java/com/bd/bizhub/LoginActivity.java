@@ -173,6 +173,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void signInWithGoogle() {
+        // Replace with your api key
         String serverClientId = "406586912954-jfvkejlogdhv9cq7lb08h8vasi1cb175.apps.googleusercontent.com";
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                .requestServerAuthCode(serverClientId)

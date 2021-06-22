@@ -62,6 +62,10 @@
 
             android:screenOrientation="portrait" />
 
+        <activity android:name = ".ui.faq.FaqActivity"
+
+            android:screenOrientation="portrait" />
+
 
 
     </application>
