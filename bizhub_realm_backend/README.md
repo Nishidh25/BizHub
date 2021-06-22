@@ -45,3 +45,8 @@ realm-cli import
 Follow the prompts and wait for the app to deploy.
 
 Congratulations! You now have a working MongoDB Realm backend with Sync enabled.
+
+
+## 5.(Optional) Enable Google Authentication
+
+Visit https://realm.mongodb.com/ -> Authentication -> Authentication Providers -> Google and follow the guide to setup Authentication keys. 
