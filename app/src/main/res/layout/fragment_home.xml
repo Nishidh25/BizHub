@@ -136,7 +136,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="Tasks"
+                    android:text="Notes"
                     android:textAppearance="?attr/textAppearanceHeadline6" />
 
                 <TextView
@@ -145,7 +145,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="8dp"
                     android:gravity="center"
-                    android:text="View your tasks"
+                    android:text="Add and edit personal notes"
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="?android:attr/textColorSecondary" />
 
