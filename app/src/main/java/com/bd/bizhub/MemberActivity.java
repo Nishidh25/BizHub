@@ -104,7 +104,10 @@ public class MemberActivity extends AppCompatActivity {
                         showSnackBar("Invalid email entered");
                         inputET.requestFocus();
                     }else {
-                        List<String> args = Arrays.asList(inputET.getText().toString());
+
+                        String pos = String.valueOf(getIntent().getIntExtra("proj_pos",0));
+                        List<String> args = Arrays.asList(inputET.getText().toString(),pos);
+                        //showSnackBar("Pos: " + pos);
                         functionsManager.callFunctionAsync("addTeamMember", args, Document.class, result -> {
                             builder.create().dismiss();
                             if (result.isSuccess()) {

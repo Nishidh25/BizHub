@@ -66,6 +66,7 @@ public class MemberAdapter extends RealmRecyclerViewAdapter<Member, MemberAdapte
         holder.setData(obj);
         holder.getName().setText(obj.getName());
 
+
         holder.getDelete().setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {

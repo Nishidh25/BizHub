@@ -66,9 +66,6 @@ public class WorkspaceFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
 
-        app = ((RealmDb) this.getActivity().getApplication()).getApp();
-
-        user = app.currentUser();
 
         //   if(userRealm == null){
         //       userRealm = Realm.getDefaultInstance();
@@ -89,6 +86,10 @@ public class WorkspaceFragment extends Fragment {
 
         textName.setText("Projects you're in");
 
+
+        app = ((RealmDb) this.getActivity().getApplication()).getApp();
+
+        user = app.currentUser();
 
         config = new SyncConfiguration.Builder(user, "user="+user.getId())
                 .build();
@@ -232,7 +233,7 @@ public class WorkspaceFragment extends Fragment {
                 projectsList = fakeCustomUserData.getMemberOf();
                 Log.d("TAG", " fake execute else: " + projectsList.stream().toString() );
             }
-            fakeRealm.close();
+            //fakeRealm.close();
 
             return projectsList;
 
@@ -277,7 +278,7 @@ public class WorkspaceFragment extends Fragment {
 
             }
         }));
-        realm.close();
+        //realm.close();
 
 
     }
@@ -337,7 +338,7 @@ public class WorkspaceFragment extends Fragment {
 
                             }
                         }));
-                        realm.close();
+                        //realm.close();
 
                         Toast.makeText(getContext(), "Deleted at position: " +
                                 position, Toast.LENGTH_LONG).show();

@@ -1,4 +1,4 @@
-exports = async function(email) {
+exports = async function(email,position) {
   const collection = context.services.get("mongodb-atlas").db("tracker").collection("User");
   const filter = {name: email};
   const newMember = await collection.findOne(filter);
@@ -22,10 +22,7 @@ exports = async function(email) {
       {_id: newMember._id},
       {$addToSet: {
           canWritePartitions: projectPartition,
-          memberOf: {
-            name: `${callingUser.custom_data.name}'s Project`,
-            partition: projectPartition,
-          }
+          memberOf: callingUser.custom_data.memberOf[position]
         }
       });
   } catch (error) {

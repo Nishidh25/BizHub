@@ -83,10 +83,10 @@ public class ProjectAdapter extends RealmRecyclerViewAdapter<Project, ProjectAda
 
                     intent.putExtra("PARTITION", proj.getPartition());
                     intent.putExtra("PROJECT NAME", proj.getName());
-
-                    Bundle bundle = new Bundle();
-                    bundle.putString("PARTITION", proj.getPartition());
-                    bundle.putString("PROJECT NAME", proj.getName());
+                    intent.putExtra("Proj_desc",proj.getDescription());
+                    intent.putExtra("proj_created",proj.getCreated());
+                    intent.putExtra("proj_pos",position);
+                    //Toast.makeText(v.getContext(), "Position: " + position, Toast.LENGTH_LONG).show();
 
 
                     v.getContext().startActivity(intent);
